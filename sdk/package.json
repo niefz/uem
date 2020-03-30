@@ -1,0 +1,29 @@
+{
+  "name": "uem-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "webpack --config webpack.config.js --progress --colors"
+  },
+  "keywords": [],
+  "author": "niefz",
+  "license": "MIT",
+  "dependencies": {
+    "ajax-hook": "^1.8.3",
+    "lz-string": "^1.4.4",
+    "platform": "^1.3.5",
+    "rrweb": "^0.7.27"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-function-bind": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
