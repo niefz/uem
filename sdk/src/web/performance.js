@@ -93,8 +93,50 @@ const performanceHandler = {
       loadEventEnd,
     } = timing;
 
-    const times = Object.assign({
+    const times = {
       key: 'performance',
+
+      navigationStart,
+
+      unloadEventStart,
+
+      unloadEventEnd,
+
+      redirectStart,
+
+      redirectEnd,
+
+      fetchStart,
+
+      domainLookupStart,
+
+      domainLookupEnd,
+
+      connectStart,
+
+      connectEnd,
+
+      secureConnectionStart,
+
+      requestStart,
+
+      responseStart,
+
+      responseEnd,
+
+      domLoading,
+
+      domInteractive,
+
+      domContentLoadedEventStart,
+
+      domContentLoadedEventEnd,
+
+      domComplete,
+
+      loadEventStart,
+
+      loadEventEnd,
 
       // 卸载前一个页面耗时
       unload: unloadEventEnd - unloadEventStart || 0,
@@ -152,7 +194,7 @@ const performanceHandler = {
 
       // happen time
       ht: Date.now(),
-    }, timing);
+    };
 
     DB.addLog(times);
   },
