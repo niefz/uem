@@ -2,11 +2,11 @@
  * 埋点统计
  * @type {Object}
  */
-import { getXPath, getBoundingClientRect, sliceText } from './lib/utils';
+import { getXPath, getBoundingClientRect, sliceText, getCookie } from './lib/utils';
 import DB from './lib/db';
 
 const behaviorHandler = {
-  init() {
+  init(opt) {
     window.document.body.addEventListener('click', function(e) {
       const targetElement = e.target || e.srcElement;
       const nodeName = targetElement.nodeName && targetElement.nodeName.toLocaleLowerCase() || '';
@@ -20,6 +20,8 @@ const behaviorHandler = {
       const pageY = e.pageY || e.clientY + scrollY;
 
       const behaviorInfo = {
+        sid: getCookie('x-session-id'),
+        uid: getCookie(opt.uid),
         key: 'behavior',
         text: sliceText(text),
         nodeName,

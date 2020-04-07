@@ -5,7 +5,7 @@ import hookXMLHttpRequest from 'ajax-hook';
 import { getCookie, uuid } from './utils';
 import DB from './db';
 
-export const hackXMLHttpRequest = (options) => {
+export const hackXMLHttpRequest = (opt) => {
   hookXMLHttpRequest.hookAjax({
     open: function(arg) {
       const [method, url] = arg;
@@ -25,7 +25,7 @@ export const hackXMLHttpRequest = (options) => {
         'x-tracing-id': tid,
       };
       xhr.setRequestHeader('x-session-id', sid);
-      if (options.enableTrace) xhr.setRequestHeader('x-tracing-id', tid);
+      if (opt.enableTrace) xhr.setRequestHeader('x-tracing-id', tid);
     },
     onreadystatechange: function(xhr) {
       if (xhr.readyState === 4) {
@@ -33,6 +33,8 @@ export const hackXMLHttpRequest = (options) => {
         const { method, url, headers, params, startTime } = xhr.api;
 
         const xhrInfo = {
+          sid: getCookie('x-session-id'),
+          uid: getCookie(opt.uid),
           key: 'api',
           page: window.location.href,
           api: {

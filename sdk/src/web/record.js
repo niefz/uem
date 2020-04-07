@@ -4,14 +4,17 @@
  */
 import { record } from 'rrweb';
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const recordHandler = {
-  init() {
+  init(opt) {
     record({
       emit(e, isCheckout) {
         // isCheckout is a flag to tell you the events has been checkout
         if (isCheckout) return;
         DB.addLog({
+          sid: getCookie('x-session-id'),
+          uid: getCookie(opt.uid),
           key: 'record',
           event: e,
           ht: Date.now(),

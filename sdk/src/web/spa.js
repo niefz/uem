@@ -3,9 +3,13 @@
  * @type {Object}
  */
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const spaHandler = {
-  init() {
+  init(opt) {
+    // uid
+    this.uid = opt.uid;
+
     // history aop
     function aop(type) {
       const source = window.history[type];
@@ -37,6 +41,8 @@ const spaHandler = {
         console.log(resource);
 
         const spaInfo = {
+          sid: getCookie('x-session-id'),
+          uid: getCookie(this.uid),
           key: 'resource',
           page: href,
           resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({

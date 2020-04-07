@@ -16,6 +16,8 @@ const options = Object.assign({
   // 上报地址
   url: 'https://uem.midea.com/r.png',
 
+  uid: 'apmUser',
+
   // 是否上报页面性能
   enableSpeed: true,
 
@@ -53,35 +55,35 @@ baseHandler.init(options);
 // dom ready
 domReady(() => {
   // 页面性能
-  if (options.enableSpeed) performanceHandler.init({ type: 'domready' });
+  if (options.enableSpeed) performanceHandler.init({ type: 'domready', ...options });
 
   // 埋点
-  if (options.enableBehavior) behaviorHandler.init();
+  if (options.enableBehavior) behaviorHandler.init(options);
 });
 
 // page load
 loaded(() => {
   // 性能
-  if (options.enableSpeed) performanceHandler.init({ type: 'loaded' });
+  if (options.enableSpeed) performanceHandler.init({ type: 'loaded', ...options });
 
   // 资源
-  if (options.enableResource) resourceHandler.init();
+  if (options.enableResource) resourceHandler.init(options);
 });
 
 // 异常错误
-if (options.enableError) errorHandler.init();
+if (options.enableError) errorHandler.init(options);
 
 // 接口
 if (options.enableHook) apiHandler.init(options);
 
 // 单页面
-if (options.enableSPA) spaHandler.init();
+if (options.enableSPA) spaHandler.init(options);
 
 // 追踪 console 内容，包括 error, warn, log, info, debug, assert
-if (options.enableConsole) consoleHandler.init();
+if (options.enableConsole) consoleHandler.init(options);
 
 // 录屏
-if (options.enableRecord) recordHandler.init();
+if (options.enableRecord) recordHandler.init(options);
 
 // 日志上报
 if (options.autoReport) report.init({ url: options.url });

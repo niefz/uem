@@ -4,7 +4,7 @@
 import { getCookie, uuid } from './utils';
 import DB from './db';
 
-export const hackFetch = () => {
+export const hackFetch = (opt) => {
   const _fetch = window.fetch;
 
   if (!_fetch) return;
@@ -18,13 +18,15 @@ export const hackFetch = () => {
     const method = options ? options.method : '';
     const params = options ? options.method === 'GET' ? param : options.body : param;
     arguments[1].headers['x-session-id'] = sid;
-    if (options.enableTrace) arguments[1].headers['x-tracing-id'] = tid;
+    if (opt.enableTrace) arguments[1].headers['x-tracing-id'] = tid;
     return _fetch
       .apply(this, arguments)
       .then(function(res) {
         const { status } = res;
         res.clone().text().then(response => {
           const fetchInfo = {
+            sid: getCookie('x-session-id'),
+            uid: getCookie(opt.uid),
             key: 'api',
             page: window.location.href,
             api: {

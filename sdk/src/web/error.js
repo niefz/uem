@@ -4,9 +4,10 @@
  */
 import { vueError } from './framework/vue';
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 export const errorHandler = {
-  init() {
+  init(opt) {
     /**
      * JS 错误
      * @param {string} message 错误信息
@@ -18,6 +19,8 @@ export const errorHandler = {
     window.onerror = function(message, source, lineno, colno, error) {
       setTimeout(() => {
         const errorInfo = {
+          sid: getCookie('x-session-id'),
+          uid: getCookie(opt.uid),
           key: 'error',
           page: window.location.href,
           message,
@@ -44,6 +47,8 @@ export const errorHandler = {
 
         const { localName, src, href } = targetElement;
         const errorInfo = {
+          sid: getCookie('x-session-id'),
+          uid: getCookie(opt.uid),
           key: 'error',
           page: window.location.href,
           message: `${localName} load error`,
@@ -65,6 +70,8 @@ export const errorHandler = {
         const { message, stack } = reason;
 
         const errorInfo = {
+          sid: getCookie('x-session-id'),
+          uid: getCookie(opt.uid),
           key: 'error',
           page: window.location.href,
           message,

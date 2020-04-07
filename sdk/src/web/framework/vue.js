@@ -2,6 +2,7 @@
  * Vue.js 2.0 framework
  */
 import DB from '../lib/db';
+import { getCookie } from '../lib/utils';
 
 function formatComponentName(vm) {
   if (vm.$root === vm) return 'root instance';
@@ -41,6 +42,7 @@ export function vueError(Vue) {
     }
 
     const errorInfo = {
+      sid: getCookie('x-session-id'),
       key: 'error',
       page: window.location.href,
       message,

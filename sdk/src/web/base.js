@@ -7,7 +7,7 @@ import { getCookie, setCookie, uuid, getNetworkType } from './lib/utils';
 import DB from './lib/db';
 
 const baseHandler = {
-  init(options) {
+  init(opt) {
 
     if (!getCookie('x-session-id')) setCookie('x-session-id', uuid(), window.location.hostname);
 
@@ -19,7 +19,7 @@ const baseHandler = {
     const { userAgent, language, connection } = navigator;
     const { onchange, effectiveType, rtt, downlink, saveData } = connection;
     const { href } = location;
-    const { uid = 'apmUser', aid, av } = options;
+    const { uid, aid, av } = opt;
 
     const base = {
       key: 'base',

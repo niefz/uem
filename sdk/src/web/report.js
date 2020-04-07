@@ -42,7 +42,7 @@ const report = {
         const loggerString = JSON.stringify(logger);
         const toCompress = LZString.compress(loggerString);
         if (window.navigator.sendBeacon && typeof window.navigator.sendBeacon === 'function') {
-          window.navigator.sendBeacon(url, toCompress);
+          window.navigator.sendBeacon(url, loggerString);
         } else if (src.length < 2083) {
           const img = new Image();
           img.src = src;
