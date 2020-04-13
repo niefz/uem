@@ -13,7 +13,7 @@ function formatComponentName(vm) {
   );
 }
 
-export function vueError(Vue) {
+export function vueError(opt, Vue) {
   Vue = Vue || window.Vue;
 
   // quit if Vue isn't on the page

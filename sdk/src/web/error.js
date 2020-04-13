@@ -85,7 +85,7 @@ export const errorHandler = {
     });
 
     // vue error
-    vueError();
+    vueError(opt);
   },
 };
 

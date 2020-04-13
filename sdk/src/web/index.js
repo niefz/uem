@@ -40,7 +40,7 @@ const options = Object.assign({
   enableConsole: false,
 
   // 是否录屏
-  enableRecord: true,
+  enableRecord: false,
 
   // 是否关联应用监控
   enableTrace: false,
