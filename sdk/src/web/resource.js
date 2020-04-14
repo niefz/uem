@@ -15,6 +15,8 @@ const resourceHandler = {
 
     const resourceInfo = {
       key: 'resource',
+      page: window.location.href,
+      title: window.document.title,
       resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
         name,
         startTime,

@@ -34,6 +34,8 @@ export const hackXMLHttpRequest = (opt) => {
 
         const xhrInfo = {
           key: 'api',
+          page: window.location.href,
+          title: window.document.title,
           api: {
             method,
             url,

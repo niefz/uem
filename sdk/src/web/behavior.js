@@ -21,6 +21,8 @@ const behaviorHandler = {
 
       const behaviorInfo = {
         key: 'behavior',
+        page: window.location.href,
+        title: window.document.title,
         text: sliceText(text),
         nodeName,
         xpath,

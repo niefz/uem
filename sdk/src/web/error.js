@@ -21,6 +21,8 @@ export const errorHandler = {
         const errorInfo = {
           key: 'error',
           type: 'javascript',
+          page: window.location.href,
+          title: window.document.title,
           message,
           lineno,
           colno,
@@ -48,6 +50,8 @@ export const errorHandler = {
         const errorInfo = {
           key: 'error',
           type: 'resource',
+          page: window.location.href,
+          title: window.document.title,
           message: `${localName} load error`,
           source: src || href,
           ht: Date.now(),
@@ -70,6 +74,8 @@ export const errorHandler = {
         const errorInfo = {
           key: 'error',
           type: 'promise',
+          page: window.location.href,
+          title: window.document.title,
           message,
           stack,
           ht: Date.now(),

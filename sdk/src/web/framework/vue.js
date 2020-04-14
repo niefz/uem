@@ -43,6 +43,8 @@ export function vueError(cb, Vue) {
     const errorInfo = {
       key: 'error',
       type: 'vue',
+      page: window.location.href,
+      title: window.document.title,
       message,
       lineno: line,
       colno: column,

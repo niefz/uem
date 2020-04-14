@@ -17,6 +17,8 @@ const consoleHandler = {
         window.console[level] = function() {
           const consoleInfo = {
             key: 'console',
+            page: window.location.href,
+            title: window.document.title,
             level,
             message: [].slice.call(arguments),
             ht: Date.now(),

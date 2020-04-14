@@ -3,12 +3,9 @@
  * @type {Object}
  */
 import DB from './lib/db';
-import report from './report';
 
 const spaHandler = {
-  init(opt) {
-    this.opt = opt;
-
+  init() {
     // history aop
     function aop(type) {
       const source = window.history[type];
@@ -39,6 +36,8 @@ const spaHandler = {
 
         const spaInfo = {
           key: 'resource',
+          page: window.location.href,
+          title: window.document.title,
           resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
             name,
             startTime,
@@ -50,13 +49,8 @@ const spaHandler = {
         };
 
         DB.addLog(spaInfo);
-
-        this.report(this.opt);
       });
     }, 0);
-  },
-  report(opt) {
-    report.reportLog(opt);
   },
 };
 
