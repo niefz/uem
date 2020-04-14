@@ -25,10 +25,7 @@ export const hackFetch = (opt) => {
         const { status } = res;
         res.clone().text().then(response => {
           const fetchInfo = {
-            sid: getCookie('x-session-id'),
-            uid: getCookie(opt.uid),
             key: 'api',
-            page: window.location.href,
             api: {
               method,
               url,

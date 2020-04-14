@@ -12,26 +12,15 @@ const baseHandler = {
     if (!getCookie('x-session-id')) setCookie('x-session-id', uuid(), window.location.hostname);
 
     const { product, name, version, os } = JSON.parse(JSON.stringify(platform));
-    const { performance, navigator, location, document } = window;
+    const { performance, navigator } = window;
     const { navigation } = performance;
     const { type, redirectCount } = navigation;
-    const { referrer, title } = document;
     const { userAgent, language, connection } = navigator;
     const { onchange, effectiveType, rtt, downlink, saveData } = connection;
-    const { href } = location;
-    const { uid, aid, av } = opt;
+    const { av } = opt;
 
     const base = {
       key: 'base',
-
-      // session id
-      sid: getCookie('x-session-id'),
-
-      // user id
-      uid: getCookie(uid),
-
-      // app id
-      aid,
 
       // app version
       av,
@@ -93,15 +82,6 @@ const baseHandler = {
 
       // happen time
       ht: Date.now(),
-
-      // referrer
-      referrer,
-
-      // page url
-      page: href,
-
-      // page title
-      title,
     };
 
     DB.addLog(base);

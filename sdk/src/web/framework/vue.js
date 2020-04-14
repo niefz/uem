@@ -2,7 +2,6 @@
  * Vue.js 2.0 framework
  */
 import DB from '../lib/db';
-import { getCookie } from '../lib/utils';
 
 function formatComponentName(vm) {
   if (vm.$root === vm) return 'root instance';
@@ -13,7 +12,7 @@ function formatComponentName(vm) {
   );
 }
 
-export function vueError(opt, Vue) {
+export function vueError(cb, Vue) {
   Vue = Vue || window.Vue;
 
   // quit if Vue isn't on the page
@@ -42,20 +41,20 @@ export function vueError(opt, Vue) {
     }
 
     const errorInfo = {
-      sid: getCookie('x-session-id'),
       key: 'error',
-      page: window.location.href,
+      type: 'vue',
       message,
       lineno: line,
       colno: column,
       source: script,
       stack,
       ht: Date.now(),
-      type: 'vue',
       extra: metaData,
     };
 
     DB.addLog(errorInfo);
+
+    cb();
 
     if (typeof _oldOnError === 'function') {
       _oldOnError.call(this, error, vm, info);

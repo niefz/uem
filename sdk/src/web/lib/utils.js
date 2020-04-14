@@ -13,6 +13,17 @@ export const getCookie = (name) => {
 };
 
 /**
+ * 设置 cookie
+ * @param name
+ * @param value
+ * @param domain
+ * @param path
+ */
+export const setCookie = (name, value, domain, path = '/') => {
+  document.cookie = `${name}=${value}; domain=${domain}; path=${path}`;
+};
+
+/**
  * uuid
  */
 export const uuid = () => {
@@ -23,17 +34,6 @@ export const uuid = () => {
     timestamp = Math.floor(timestamp / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
-};
-
-/**
- * 设置 cookie
- * @param name
- * @param value
- * @param domain
- * @param path
- */
-export const setCookie = (name, value, domain, path = '/') => {
-  document.cookie = `${name}=${value}; domain=${domain}; path=${path}`;
 };
 
 /**
@@ -70,21 +70,6 @@ export const loaded = (callback) => {
     }
   };
   window.addEventListener('load', check, false);
-};
-
-/**
- * 参数格式化
- * @param data
- * @returns {string}
- */
-export const formatter = (data) => {
-  let arr = [];
-  for (let key in data) {
-    if (data.hasOwnProperty(key)) {
-      arr.push(`${key}=${data[key]}`);
-    }
-  }
-  return arr.join('&');
 };
 
 /**
@@ -200,4 +185,19 @@ export const sliceText = (text = '', limit = 15) => {
     return `${text.substring(0, limit)}...${text.substring(len - limit, len)}`;
   }
   return text;
+};
+
+/**
+ * 参数格式化
+ * @param data
+ * @returns {string}
+ */
+export const formatter = (data) => {
+  let arr = [];
+  for (let key in data) {
+    if (data.hasOwnProperty(key)) {
+      arr.push(`${key}=${data[key]}`);
+    }
+  }
+  return arr.join('&');
 };

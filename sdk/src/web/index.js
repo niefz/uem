@@ -34,7 +34,7 @@ const options = Object.assign({
   enableSPA: true,
 
   // 是否埋点
-  enableBehavior: true,
+  enableBehavior: false,
 
   // 是否追踪 console 内容，包括 error, warn, log, info, debug, assert
   enableConsole: false,

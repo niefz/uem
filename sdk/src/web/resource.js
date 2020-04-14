@@ -3,23 +3,18 @@
  * @type {Object}
  */
 import DB from './lib/db';
-import { getCookie } from './lib/utils';
 
 const resourceHandler = {
-  init(opt) {
+  init() {
     if (!(window.performance && window.performance.getEntries)) return;
-    const resources = this.getPerformanceEntries(opt);
+    this.getPerformanceEntries();
   },
-  getPerformanceEntries(opt) {
-    const { location, performance } = window;
-    const { href } = location;
+  getPerformanceEntries() {
+    const { performance } = window;
     const resource = performance.getEntriesByType('resource');
 
     const resourceInfo = {
-      sid: getCookie('x-session-id'),
-      uid: getCookie(opt.uid),
       key: 'resource',
-      page: href,
       resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
         name,
         startTime,

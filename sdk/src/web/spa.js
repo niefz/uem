@@ -3,13 +3,10 @@
  * @type {Object}
  */
 import DB from './lib/db';
-import { getCookie } from './lib/utils';
+import report from './report';
 
 const spaHandler = {
-  init(opt) {
-    // uid
-    this.uid = opt.uid;
-
+  init() {
     // history aop
     function aop(type) {
       const source = window.history[type];
@@ -28,23 +25,18 @@ const spaHandler = {
     window.addEventListener('pushState', this.handler, true);
     window.addEventListener('replaceState', this.handler, true);
   },
-  handler(e) {
+  handler() {
     setTimeout(() => {
       DB.getLogs({
         start: Date.now() - 24 * 3600 * 1000,
         end: Date.now(),
-      }, function(err, result) {
-        const { location, performance } = window;
-        const { href } = location;
+      }, (err, result) => {
+        const { performance } = window;
         const already = result.filter(r => r.key === 'resource').map(r => r.resource).flat(1);
         const resource = performance.getEntriesByType('resource').filter(r => already.every(a => a.name !== r.name && a.startTime !== r.startTime));
-        console.log(resource);
 
         const spaInfo = {
-          sid: getCookie('x-session-id'),
-          uid: getCookie(this.uid),
           key: 'resource',
-          page: href,
           resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
             name,
             startTime,
@@ -58,6 +50,9 @@ const spaHandler = {
         DB.addLog(spaInfo);
       });
     }, 0);
+  },
+  report(opt) {
+    report.reportLog(opt);
   },
 };
 

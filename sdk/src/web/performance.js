@@ -3,14 +3,13 @@
  * @type {Object}
  */
 import DB from './lib/db';
-import { getCookie } from './lib/utils';
 
 const performanceHandler = {
-  init({ type, uid }) {
+  init({ type }) {
     if (!window.performance) return;
-    this.getPerformanceTiming({ type, uid });
+    this.getPerformanceTiming({ type });
   },
-  getPerformanceTiming({ type, uid }) {
+  getPerformanceTiming({ type }) {
     const { performance, location } = window;
     const { timing } = performance;
     const { protocol } = location;
@@ -95,10 +94,6 @@ const performanceHandler = {
     } = timing;
 
     const times = {
-      sid: getCookie('x-session-id'),
-
-      uid: getCookie(uid),
-
       key: 'performance',
 
       navigationStart,

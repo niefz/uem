@@ -33,10 +33,7 @@ export const hackXMLHttpRequest = (opt) => {
         const { method, url, headers, params, startTime } = xhr.api;
 
         const xhrInfo = {
-          sid: getCookie('x-session-id'),
-          uid: getCookie(opt.uid),
           key: 'api',
-          page: window.location.href,
           api: {
             method,
             url,

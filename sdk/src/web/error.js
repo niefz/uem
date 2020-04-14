@@ -4,7 +4,7 @@
  */
 import { vueError } from './framework/vue';
 import DB from './lib/db';
-import { getCookie } from './lib/utils';
+import report from './report';
 
 export const errorHandler = {
   init(opt) {
@@ -16,30 +16,29 @@ export const errorHandler = {
      * @param {number} colno 发生错误的列号
      * @param {object} error Error 对象
      */
-    window.onerror = function(message, source, lineno, colno, error) {
+    window.onerror = (message, source, lineno, colno, error) => {
       setTimeout(() => {
         const errorInfo = {
-          sid: getCookie('x-session-id'),
-          uid: getCookie(opt.uid),
           key: 'error',
-          page: window.location.href,
+          type: 'javascript',
           message,
           lineno,
           colno,
           source,
           stack: error && error.stack ? error.stack : null,
           ht: Date.now(),
-          type: 'javascript',
         };
 
         DB.addLog(errorInfo);
+
+        this.report(opt);
       }, 0);
     };
 
     /**
      * 资源加载错误
      */
-    window.addEventListener('error', function(e) {
+    window.addEventListener('error', (e) => {
       if (e) {
         const targetElement = e.target || e.srcElement;
 
@@ -47,45 +46,46 @@ export const errorHandler = {
 
         const { localName, src, href } = targetElement;
         const errorInfo = {
-          sid: getCookie('x-session-id'),
-          uid: getCookie(opt.uid),
           key: 'error',
-          page: window.location.href,
+          type: 'resource',
           message: `${localName} load error`,
           source: src || href,
           ht: Date.now(),
-          type: 'resource',
         };
 
         DB.addLog(errorInfo);
+
+        this.report(opt);
       }
     }, true);
 
     /**
      * Uncaught (in promise)
      */
-    window.addEventListener('unhandledrejection', function(e) {
+    window.addEventListener('unhandledrejection', (e) => {
       if (e) {
         const { reason } = e;
         const { message, stack } = reason;
 
         const errorInfo = {
-          sid: getCookie('x-session-id'),
-          uid: getCookie(opt.uid),
           key: 'error',
-          page: window.location.href,
+          type: 'promise',
           message,
           stack,
           ht: Date.now(),
-          type: 'promise',
         };
 
         DB.addLog(errorInfo);
+
+        this.report(opt);
       }
     });
 
     // vue error
-    vueError(opt);
+    vueError(this.report(opt));
+  },
+  report(opt) {
+    report.reportLog(opt);
   },
 };
 
