@@ -6,7 +6,9 @@ import DB from './lib/db';
 import report from './report';
 
 const spaHandler = {
-  init() {
+  init(opt) {
+    this.opt = opt;
+
     // history aop
     function aop(type) {
       const source = window.history[type];
@@ -48,6 +50,8 @@ const spaHandler = {
         };
 
         DB.addLog(spaInfo);
+
+        this.report(this.opt);
       });
     }, 0);
   },
