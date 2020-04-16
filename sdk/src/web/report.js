@@ -34,16 +34,10 @@ const report = {
     }, function(err, result) {
       if (result.length) {
         const { aid, uid, url } = opt;
-        const { location, document } = window;
-        const { referrer, title } = document;
-        const { href } = location;
         const logger = {
           aid,
           sid: getCookie('x-session-id'),
           uid: getCookie(uid),
-          referrer,
-          page: href,
-          title,
           base: result.filter(r => r.key === 'base'),
           performance: result.filter(r => r.key === 'performance'),
           resource: result.filter(r => r.key === 'resource'),

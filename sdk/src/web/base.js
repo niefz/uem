@@ -22,6 +22,15 @@ const baseHandler = {
     const base = {
       key: 'base',
 
+      // page
+      page: window.location.href,
+
+      // page title
+      title: window.document.title,
+
+      // page referrer
+      referrer: window.document.referrer,
+
       // app version
       av,
 
