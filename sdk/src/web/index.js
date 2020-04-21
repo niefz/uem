@@ -86,4 +86,4 @@ if (options.enableConsole) consoleHandler.init(options);
 if (options.enableRecord) recordHandler.init(options);
 
 // 日志上报
-if (options.autoReport) report.init({ url: options.url });
+if (options.autoReport) report.init(options);
