@@ -163,7 +163,7 @@ const performanceHandler = {
 
       // ttfb 即 Time To First Byte 网络请求耗时
       // 维基百科：https://en.wikipedia.org/wiki/Time_To_First_Byte
-      ttfb: responseStart - navigationStart || 0,
+      ttfb: responseStart - requestStart || 0,
 
       // 数据传输耗时
       transmission: responseEnd - responseStart || 0,
@@ -184,10 +184,10 @@ const performanceHandler = {
       tti: domInteractive - fetchStart || 0,
 
       //【重要】HTML 加载完成耗时， 即 DOM Ready 时间
-      domready: domComplete - responseEnd || 0,
+      domready: domContentLoadedEventEnd - fetchStart || 0,
 
       //【重要】页面完全加载耗时
-      load: loadEventEnd - navigationStart || 0,
+      load: loadEventStart - fetchStart || 0,
 
       // 加载类型
       type,

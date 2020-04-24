@@ -7,12 +7,11 @@ function formatComponentName(vm) {
   if (vm.$root === vm) return 'root instance';
   const name = vm._isVue ? vm.$options.name || vm.$options._componentTag : vm.name;
   return (
-    (name ? 'component <' + name + '>' : 'anonymous component') +
-    (vm._isVue && vm.$options.__file ? ' at ' + vm.$options.__file : '')
+    (name ? 'component <' + name + '>' : 'anonymous component') + (vm._isVue && vm.$options.__file ? ' at ' + vm.$options.__file : '')
   );
 }
 
-export function vueError(cb, Vue) {
+export function vuePlugin(cb, Vue) {
   Vue = Vue || window.Vue;
 
   // quit if Vue isn't on the page
@@ -20,9 +19,10 @@ export function vueError(cb, Vue) {
 
   const _oldOnError = Vue.config.errorHandler;
 
-  Vue.config.errorHandler = function VueErrorHandler(error, vm, info) {
+  Vue.config.errorHandler = (error, vm, info) => {
     const {
       message, // 异常信息
+      name, // 异常名称
       script, // 异常脚本 url
       line, // 异常行号
       column, // 异常列号

@@ -2,7 +2,7 @@
  * 异常统计
  * @type {Object}
  */
-import { vueError } from './framework/vue';
+import { vuePlugin } from './framework/vue';
 import DB from './lib/db';
 import report from './report';
 
@@ -27,7 +27,7 @@ export const errorHandler = {
           lineno,
           colno,
           source,
-          stack: error && error.stack ? error.stack : null,
+          stack: error && error.stack ? error.stack : error,
           ht: Date.now(),
         };
 
@@ -41,54 +41,54 @@ export const errorHandler = {
      * 资源加载错误
      */
     window.addEventListener('error', (e) => {
-      if (e) {
-        const targetElement = e.target || e.srcElement;
+      const { target, srcElement } = e;
+      const targetElement = target || srcElement;
 
-        if (targetElement === window) return;
+      if (targetElement === window) return;
 
-        const { localName, src, href } = targetElement;
-        const errorInfo = {
-          key: 'error',
-          type: 'resource',
-          page: window.location.href,
-          title: window.document.title,
-          message: `${localName} load error`,
-          source: src || href,
-          ht: Date.now(),
-        };
+      const { localName, src, href } = targetElement;
+      const errorInfo = {
+        key: 'error',
+        type: 'resource',
+        page: window.location.href,
+        title: window.document.title,
+        message: `${localName} is load error`,
+        stack: 'resource is not found',
+        source: src || href,
+        lineno: 0,
+        colno: 0,
+        ht: Date.now(),
+      };
 
-        DB.addLog(errorInfo);
+      DB.addLog(errorInfo);
 
-        this.report(opt);
-      }
+      this.report(opt);
     }, true);
 
     /**
      * Uncaught (in promise)
      */
     window.addEventListener('unhandledrejection', (e) => {
-      if (e) {
-        const { reason } = e;
-        const { message, stack } = reason;
+      const { reason, detail } = e;
+      const errorInfo = {
+        key: 'error',
+        type: 'promise',
+        page: window.location.href,
+        title: window.document.title,
+        message: reason ? reason : detail && detail.reason ? detail.reason : e,
+        stack: 'promise is error',
+        lineno: 0,
+        colno: 0,
+        ht: Date.now(),
+      };
 
-        const errorInfo = {
-          key: 'error',
-          type: 'promise',
-          page: window.location.href,
-          title: window.document.title,
-          message,
-          stack,
-          ht: Date.now(),
-        };
+      DB.addLog(errorInfo);
 
-        DB.addLog(errorInfo);
-
-        this.report(opt);
-      }
+      this.report(opt);
     });
 
     // vue error
-    vueError(this.report(opt));
+    vuePlugin(this.report(opt));
   },
   report(opt) {
     report.reportLog(opt);

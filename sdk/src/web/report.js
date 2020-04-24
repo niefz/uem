@@ -5,7 +5,7 @@
  */
 import LZString from 'lz-string';
 import DB from './lib/db';
-import { formatter, getCookie } from './lib/utils';
+import { formatter, getCookie, loaded } from './lib/utils';
 
 const report = {
   init(opt) {
@@ -21,11 +21,16 @@ const report = {
       this.reportLog(opt);
     }, false);
 
-    // 定时上报
-    const timeout = 1000 * 10; // 10s
-    setTimeout(() => {
+    // 页面加载时，自动触发上报
+    loaded(() => {
       this.reportLog(opt);
-    }, timeout);
+    });
+
+    // 定时上报
+    // const timeout = 1000 * 10; // 10s
+    // setTimeout(() => {
+    //   this.reportLog(opt);
+    // }, timeout);
   },
   reportLog(opt) {
     DB.getLogs({

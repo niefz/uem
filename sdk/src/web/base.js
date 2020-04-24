@@ -17,7 +17,7 @@ const baseHandler = {
     const { type, redirectCount } = navigation;
     const { userAgent, language, connection } = navigator;
     const { onchange, effectiveType, rtt, downlink, saveData } = connection;
-    const { av } = opt;
+    const { av = '' } = opt;
 
     const base = {
       key: 'base',
