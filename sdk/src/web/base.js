@@ -9,7 +9,11 @@ import DB from './lib/db';
 const baseHandler = {
   init(opt) {
 
+    // mark session
     if (!getCookie('x-session-id')) setCookie('x-session-id', uuid(), window.location.hostname);
+
+    // mark page
+    setCookie('pid', uuid(), window.location.hostname);
 
     const { product, name, version, os } = JSON.parse(JSON.stringify(platform));
     const { performance, navigator } = window;

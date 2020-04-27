@@ -12,7 +12,7 @@ export const hackXMLHttpRequest = (opt) => {
       this.api = {
         method,
         url,
-        startTime: Date.now(),
+        startTime: performance.now(),
       };
     },
     send: function(arg, xhr) {
@@ -42,9 +42,9 @@ export const hackXMLHttpRequest = (opt) => {
             headers,
             params,
             status,
-            response,
+            // response,
             startTime,
-            endTime: Date.now(),
+            endTime: performance.now(),
           },
           ht: Date.now(),
         };

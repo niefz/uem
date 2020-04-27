@@ -37,13 +37,24 @@ module.exports = {
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true,
+        sourceMap: false,
+        extractComments: false,
+        uglifyOptions: {
+          warnings: false,
+          compress: {
+            unused: true,
+            drop_debugger: true,
+          },
+          output: {
+            comments: false,
+          },
+        },
       }),
     ],
   },

@@ -13,10 +13,7 @@ const recordHandler = {
         if (isCheckout) return;
         DB.addLog({
           key: 'record',
-          page: window.location.href,
-          title: window.document.title,
           event: e,
-          ht: Date.now(),
         });
       },
       checkoutEveryNms: 5 * 60 * 1000, // checkout every 5 minutes

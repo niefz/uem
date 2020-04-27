@@ -196,6 +196,9 @@ export const formatter = (data) => {
   let arr = [];
   for (let key in data) {
     if (data.hasOwnProperty(key)) {
+      if (data[key] instanceof Object) {
+        data[key] = JSON.stringify(data[key]);
+      }
       arr.push(`${key}=${data[key]}`);
     }
   }

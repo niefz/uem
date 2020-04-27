@@ -56,6 +56,8 @@ export function vuePlugin(cb, Vue) {
 
     DB.addLog(errorInfo);
 
+    console.log(Vue);
+
     cb();
 
     if (typeof _oldOnError === 'function') {

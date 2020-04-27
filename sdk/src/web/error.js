@@ -17,6 +17,7 @@ export const errorHandler = {
      * @param {object} error Error 对象
      */
     window.onerror = (message, source, lineno, colno, error) => {
+      if (message === 'Script error.' || !source) return;
       setTimeout(() => {
         const errorInfo = {
           key: 'error',
@@ -30,9 +31,7 @@ export const errorHandler = {
           stack: error && error.stack ? error.stack : error,
           ht: Date.now(),
         };
-
         DB.addLog(errorInfo);
-
         this.report(opt);
       }, 0);
     };
@@ -43,25 +42,21 @@ export const errorHandler = {
     window.addEventListener('error', (e) => {
       const { target, srcElement } = e;
       const targetElement = target || srcElement;
-
       if (targetElement === window) return;
-
-      const { localName, src, href } = targetElement;
+      const { src, href } = targetElement;
       const errorInfo = {
         key: 'error',
         type: 'resource',
         page: window.location.href,
         title: window.document.title,
-        message: `${localName} is load error`,
-        stack: 'resource is not found',
+        message: e.message,
+        lineno: e.lineno,
+        colno: e.colno,
         source: src || href,
-        lineno: 0,
-        colno: 0,
+        stack: e.error.stack,
         ht: Date.now(),
       };
-
       DB.addLog(errorInfo);
-
       this.report(opt);
     }, true);
 
@@ -69,23 +64,48 @@ export const errorHandler = {
      * Uncaught (in promise)
      */
     window.addEventListener('unhandledrejection', (e) => {
-      const { reason, detail } = e;
       const errorInfo = {
         key: 'error',
         type: 'promise',
         page: window.location.href,
         title: window.document.title,
-        message: reason ? reason : detail && detail.reason ? detail.reason : e,
-        stack: 'promise is error',
+        message: e.reason.message,
         lineno: 0,
         colno: 0,
+        source: e.reason ? e.reason.config.url : '',
+        stack: e.reason.stack,
         ht: Date.now(),
       };
-
       DB.addLog(errorInfo);
-
       this.report(opt);
     });
+
+    // Script error
+    const originAddEventListener = EventTarget.prototype.addEventListener;
+    EventTarget.prototype.addEventListener = function(type, listener, options) {
+      const wrappedListener = function(...args) {
+        try {
+          return listener.apply(this, args);
+        } catch (err) {
+          const errorInfo = {
+            key: 'error',
+            type: 'javascript',
+            page: window.location.href,
+            title: window.document.title,
+            message: err.message,
+            lineno: 0,
+            colno: 0,
+            source: '',
+            stack: err.stack,
+            ht: Date.now(),
+          };
+          DB.addLog(errorInfo);
+          this.report(opt);
+          throw err;
+        }
+      };
+      return originAddEventListener.call(this, type, wrappedListener, options);
+    };
 
     // vue error
     vuePlugin(this.report(opt));

@@ -11,7 +11,7 @@ const resourceHandler = {
   },
   getPerformanceEntries() {
     const { performance } = window;
-    const resource = performance.getEntriesByType('resource');
+    const resource = performance.getEntriesByType('resource').filter((r) => ['link', 'script', 'css', 'img', 'other'].includes(r.initiatorType));
 
     const resourceInfo = {
       key: 'resource',

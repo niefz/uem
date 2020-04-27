@@ -25,32 +25,25 @@ const spaHandler = {
     window.addEventListener('replaceState', this.handler, true);
   },
   handler() {
-    setTimeout(() => {
-      DB.getLogs({
-        start: Date.now() - 24 * 3600 * 1000,
-        end: Date.now(),
-      }, (err, result) => {
-        const { performance } = window;
-        const already = result.filter(r => r.key === 'resource').map(r => r.resource).flat(1);
-        const resource = performance.getEntriesByType('resource').filter(r => already.every(a => a.name !== r.name && a.startTime !== r.startTime));
-
-        const spaInfo = {
-          key: 'resource',
-          page: window.location.href,
-          title: window.document.title,
-          resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
-            name,
-            startTime,
-            duration,
-            transferSize,
-            initiatorType,
-          })),
-          ht: Date.now(),
-        };
-
-        DB.addLog(spaInfo);
-      });
-    }, 0);
+    // const resources = [];
+    // const performanceObserver = new PerformanceObserver(function(list) {
+    //   const [PerformanceNavigationTiming] = list.getEntriesByType('navigation');
+    //   if (PerformanceNavigationTiming) return;
+    //   const [PerformanceResourceTiming] = list.getEntriesByType('resource');
+    //   if (PerformanceResourceTiming) resources.push(PerformanceResourceTiming);
+    //   const resource = resources.filter((r) => ['link', 'script', 'css', 'img', 'other'].includes(r.initiatorType));
+    //   console.log(resource);
+    // });
+    // performanceObserver.observe({
+    //   entryTypes: ['navigation', 'resource'],
+    // });
+    const spaInfo = {
+      key: 'spa',
+      hash: window.location.href,
+      title: window.document.title,
+      ht: Date.now(),
+    };
+    DB.addLog(spaInfo);
   },
 };
 
