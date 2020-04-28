@@ -2,7 +2,7 @@
  * XMLHttpRequest hook
  */
 import hookXMLHttpRequest from 'ajax-hook';
-import { getCookie, uuid } from './utils';
+import { getCookie, uuid, convertToJson } from './utils';
 import DB from './db';
 
 export const hackXMLHttpRequest = (opt) => {
@@ -12,6 +12,7 @@ export const hackXMLHttpRequest = (opt) => {
       this.api = {
         method,
         url,
+        params: method === 'GET' ? convertToJson(url.split('?')[1]) : '',
         startTime: performance.now(),
       };
     },
@@ -19,7 +20,7 @@ export const hackXMLHttpRequest = (opt) => {
       const sid = getCookie('x-session-id');
       const tid = uuid();
       const [params] = arg;
-      this.api.params = params;
+      if (params) this.api.params = params;
       this.api.headers = {
         'x-session-id': sid,
         'x-tracing-id': tid,

@@ -5,7 +5,7 @@
  */
 import LZString from 'lz-string';
 import DB from './lib/db';
-import { formatter, getCookie, loaded } from './lib/utils';
+import { getCookie, loaded, convertToUrlParams } from './lib/utils';
 
 const report = {
   init(opt) {
@@ -17,9 +17,10 @@ const report = {
     }, false);
 
     // 页面卸载时，自动触发上报
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', (event) => {
+      event.preventDefault();
       this.reportLog(opt, 'leave');
-    }, false);
+    });
 
     // 页面加载时，自动触发上报
     loaded(() => {
@@ -27,12 +28,18 @@ const report = {
     });
 
     // 定时上报
+    const timeout = 1000 * 10;
+    const interval = () => {
+      this.reportLog(opt);
+      setTimeout(interval, timeout);
+    };
+    setTimeout(interval, timeout);
   },
   reportLog(opt, type = 'process') {
     DB.getLogs({
       start: Date.now() - 24 * 3600 * 1000,
       end: Date.now(),
-    }, function(err, result) {
+    }, (err, result) => {
       if (result.length || type === 'leave') {
         const { aid, uid, url } = opt;
         const logger = {
@@ -52,9 +59,9 @@ const report = {
           console: result.filter(r => r.key === 'console'),
           record: result.filter(r => r.key === 'record'),
         };
-        const src = url + '?' + formatter(logger);
         const loggerString = JSON.stringify(logger);
         const toCompress = LZString.compress(loggerString);
+        const src = url + '?' + convertToUrlParams(JSON.parse(loggerString));
         if (window.navigator.sendBeacon && typeof window.navigator.sendBeacon === 'function') {
           const headers = {
             type: 'text/plain; charset=utf-8',
@@ -67,7 +74,7 @@ const report = {
         } else {
           const client = new XMLHttpRequest();
           client.open('POST', url, false);
-          client.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          client.setRequestHeader('Content-Type', 'text/plain; charset=utf-8');
           client.send(toCompress);
         }
         DB.clearDB();

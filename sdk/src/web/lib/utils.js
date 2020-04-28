@@ -188,11 +188,11 @@ export const sliceText = (text = '', limit = 15) => {
 };
 
 /**
- * 参数格式化
+ * json 转 url params
  * @param data
  * @returns {string}
  */
-export const formatter = (data) => {
+export const convertToUrlParams = (data) => {
   let arr = [];
   for (let key in data) {
     if (data.hasOwnProperty(key)) {
@@ -204,3 +204,21 @@ export const formatter = (data) => {
   }
   return arr.join('&');
 };
+
+/**
+ * url params 转 json
+ * @param str
+ * @returns {{}}
+ */
+export const convertToJson = (str) => {
+  let temp = [];
+  const ary = str.split('&');
+  const json = {};
+  ary.forEach((item) => {
+    temp = item.split('=');
+    const [key, value] = temp;
+    json[key] = value;
+  });
+  return json;
+};
+

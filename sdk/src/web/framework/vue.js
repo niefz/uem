@@ -2,6 +2,7 @@
  * Vue.js 2.0 framework
  */
 import DB from '../lib/db';
+import report from '../report';
 
 function formatComponentName(vm) {
   if (vm.$root === vm) return 'root instance';
@@ -11,7 +12,7 @@ function formatComponentName(vm) {
   );
 }
 
-export function vuePlugin(cb, Vue) {
+export function vuePlugin(Vue) {
   Vue = Vue || window.Vue;
 
   // quit if Vue isn't on the page
@@ -42,7 +43,7 @@ export function vuePlugin(cb, Vue) {
 
     const errorInfo = {
       key: 'error',
-      type: 'vue',
+      type: 'javascript',
       page: window.location.href,
       title: window.document.title,
       message,
@@ -56,9 +57,7 @@ export function vuePlugin(cb, Vue) {
 
     DB.addLog(errorInfo);
 
-    console.log(Vue);
-
-    cb();
+    report.reportLog(this.config);
 
     if (typeof _oldOnError === 'function') {
       _oldOnError.call(this, error, vm, info);

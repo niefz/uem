@@ -10,8 +10,13 @@ import behaviorHandler from './behavior';
 import consoleHandler from './console';
 import recordHandler from './record';
 import report from './report';
+import { vuePlugin } from './framework/vue';
 
-const { config } = window.Performance || {};
+const { config } = window.uReport || {};
+
+window.uReport.vuePlugin = function() {
+  vuePlugin.apply(this, arguments);
+};
 
 const options = Object.assign({
   // 上报地址

@@ -99,16 +99,16 @@ const performanceHandler = {
       firstbyte: responseStart - domainLookupStart,
 
       // First Paint Time 首次渲染时间/白屏时间
-      fpt: responseEnd,
+      fpt: responseEnd - fetchStart,
 
       // Time to Interact 首次可交互时间
-      tti: domInteractive,
+      tti: domInteractive - fetchStart,
 
       //【重要】HTML 加载完成耗时， 即 DOM Ready 时间
-      domready: domContentLoadedEventEnd,
+      domready: domContentLoadedEventEnd - fetchStart,
 
       //【重要】页面完全加载耗时
-      load: loadEventStart,
+      load: loadEventStart - fetchStart,
 
       // 加载类型
       type,

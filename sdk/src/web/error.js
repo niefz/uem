@@ -2,7 +2,6 @@
  * 异常统计
  * @type {Object}
  */
-import { vuePlugin } from './framework/vue';
 import DB from './lib/db';
 import report from './report';
 
@@ -106,9 +105,6 @@ export const errorHandler = {
       };
       return originAddEventListener.call(this, type, wrappedListener, options);
     };
-
-    // vue error
-    vuePlugin(this.report(opt));
   },
   report(opt) {
     report.reportLog(opt);
