@@ -24,12 +24,18 @@ export function vuePlugin(Vue) {
     const {
       message, // 异常信息
       name, // 异常名称
-      script, // 异常脚本 url
-      line, // 异常行号
-      column, // 异常列号
       stack // 异常堆栈信息
     } = error;
     const metaData = {};
+
+    const [lineno = 0, colno = 0] = stack
+      .replace(`${name}: ${message}`, '')
+      .split('\n') // 以换行分割信息
+      .map((v) => v
+        .replace(/^\s*|\s*$/g, '')
+        .replace(/\w.+[js&|]:|\)$/g, '')
+        .split(':')
+      )[1];
 
     // vm and lifecycleHook are not always available
     if (Object.prototype.toString.call(vm) === '[object Object]') {
@@ -46,10 +52,10 @@ export function vuePlugin(Vue) {
       type: 'javascript',
       page: window.location.href,
       title: window.document.title,
-      message,
-      lineno: line,
-      colno: column,
-      source: script,
+      message: `${name}: ${message}`,
+      lineno,
+      colno,
+      source: vm.$options ? vm.$options.__file : '',
       stack,
       ht: Date.now(),
       extra: metaData,

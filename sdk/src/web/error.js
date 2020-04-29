@@ -18,6 +18,7 @@ export const errorHandler = {
     window.onerror = (message, source, lineno, colno, error) => {
       if (message === 'Script error.' || !source) return;
       setTimeout(() => {
+        lineno = lineno || (window.event && window.event.errorCharacter) || 0;
         const errorInfo = {
           key: 'error',
           type: 'javascript',
@@ -27,7 +28,7 @@ export const errorHandler = {
           lineno,
           colno,
           source,
-          stack: error && error.stack ? error.stack : error,
+          stack: error && error.stack ? error.stack.toString() : error,
           ht: Date.now(),
         };
         DB.addLog(errorInfo);
@@ -52,7 +53,7 @@ export const errorHandler = {
         lineno: e.lineno,
         colno: e.colno,
         source: src || href,
-        stack: e.error.stack,
+        stack: e.error.stack.toString(),
         ht: Date.now(),
       };
       DB.addLog(errorInfo);
@@ -71,8 +72,8 @@ export const errorHandler = {
         message: e.reason.message,
         lineno: 0,
         colno: 0,
-        source: e.reason ? e.reason.config.url : '',
-        stack: e.reason.stack,
+        source: e.reason.config ? e.reason.config.url : '',
+        stack: e.reason.stack.toString(),
         ht: Date.now(),
       };
       DB.addLog(errorInfo);
@@ -95,7 +96,7 @@ export const errorHandler = {
             lineno: 0,
             colno: 0,
             source: '',
-            stack: err.stack,
+            stack: err.stack.toString(),
             ht: Date.now(),
           };
           DB.addLog(errorInfo);
