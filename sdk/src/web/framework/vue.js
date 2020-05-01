@@ -3,6 +3,7 @@
  */
 import DB from '../lib/db';
 import report from '../report';
+import { getCookie } from '../lib/utils';
 
 function formatComponentName(vm) {
   if (vm.$root === vm) return 'root instance';
@@ -28,14 +29,20 @@ export function vuePlugin(Vue) {
     } = error;
     const metaData = {};
 
-    const [lineno = 0, colno = 0] = stack
+    const [source] = stack
       .replace(`${name}: ${message}`, '')
+      .replace(/^\s*|\s*$/g, '')
       .split('\n') // 以换行分割信息
       .map((v) => v
         .replace(/^\s*|\s*$/g, '')
-        .replace(/\w.+[js&|]:|\)$/g, '')
-        .split(':')
-      )[1];
+        .replace(/\w.+[(]|[)]$/g, '')
+      );
+
+    const [number] = source
+      .match(/(\d+)(?::(\d+))?\s*$/i);
+
+    const [lineno = 0, colno = 0] = number
+      .split(':');
 
     // vm and lifecycleHook are not always available
     if (Object.prototype.toString.call(vm) === '[object Object]') {
@@ -50,13 +57,14 @@ export function vuePlugin(Vue) {
     const errorInfo = {
       key: 'error',
       type: 'javascript',
+      pid: getCookie('pid'),
       page: window.location.href,
       title: window.document.title,
       message: `${name}: ${message}`,
       lineno,
       colno,
-      source: vm.$options ? vm.$options.__file : '',
-      stack,
+      source,
+      stack: stack.toString(),
       ht: Date.now(),
       extra: metaData,
     };

@@ -3,9 +3,10 @@
  * @type {Object}
  */
 import DB from './lib/db';
+import { setCookie, uuid } from './lib/utils';
 
 const spaHandler = {
-  init() {
+  init(options) {
     // history aop
     function aop(type) {
       const source = window.history[type];
@@ -20,11 +21,17 @@ const spaHandler = {
     window.history.pushState = aop('pushState');
     window.history.replaceState = aop('replaceState');
 
-    window.addEventListener('hashchange', this.handler, false);
-    window.addEventListener('pushState', this.handler, true);
-    window.addEventListener('replaceState', this.handler, true);
+    window.addEventListener('hashchange', (event) => {
+      this.handler(event, options);
+    });
+    window.addEventListener('pushState', (event) => {
+      this.handler(event, options);
+    }, true);
+    window.addEventListener('replaceState', (event) => {
+      this.handler(event, options);
+    });
   },
-  handler() {
+  handler(event, options) {
     // const resources = [];
     // const performanceObserver = new PerformanceObserver(function(list) {
     //   const [PerformanceNavigationTiming] = list.getEntriesByType('navigation');
@@ -37,13 +44,23 @@ const spaHandler = {
     // performanceObserver.observe({
     //   entryTypes: ['navigation', 'resource'],
     // });
-    const spaInfo = {
-      key: 'spa',
-      hash: window.location.href,
-      title: window.document.title,
-      ht: Date.now(),
-    };
-    DB.addLog(spaInfo);
+    if (event.type === 'replaceState') return;
+
+    // mark page
+    const pid = uuid();
+
+    setCookie('pid', pid, window.location.hostname);
+
+    setTimeout(() => {
+      const spaInfo = {
+        key: 'spa',
+        pid,
+        page: event.target.location.href,
+        title: event.target.document.title,
+        ht: Date.now(),
+      };
+      DB.addLog(spaInfo);
+    }, 100);
   },
 };
 

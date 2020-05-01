@@ -3,6 +3,7 @@
  * @type {Object}
  */
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const resourceHandler = {
   init() {
@@ -15,6 +16,7 @@ const resourceHandler = {
 
     const resourceInfo = {
       key: 'resource',
+      pid: getCookie('pid'),
       page: window.location.href,
       title: window.document.title,
       resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({

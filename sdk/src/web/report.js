@@ -47,7 +47,6 @@ const report = {
           aid,
           sid: getCookie('x-session-id'),
           uid: getCookie(uid) || 'anonymous',
-          pid: getCookie('pid'),
           rt: Date.now(),
           base: result.find(r => r.key === 'base'),
           performance: result.filter(r => r.key === 'performance'),

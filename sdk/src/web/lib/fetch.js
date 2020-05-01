@@ -26,6 +26,7 @@ export const hackFetch = (opt) => {
         res.clone().text().then(response => {
           const fetchInfo = {
             key: 'api',
+            pid: getCookie('pid'),
             page: window.location.href,
             title: window.document.title,
             api: {

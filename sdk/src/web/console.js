@@ -3,6 +3,7 @@
  * @type {Object}
  */
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const consoleHandler = {
   init() {
@@ -17,6 +18,7 @@ const consoleHandler = {
         window.console[level] = function() {
           const consoleInfo = {
             key: 'console',
+            pid: getCookie('pid'),
             page: window.location.href,
             title: window.document.title,
             level,

@@ -4,6 +4,7 @@
  */
 import DB from './lib/db';
 import report from './report';
+import { getCookie } from './lib/utils';
 
 export const errorHandler = {
   init(opt) {
@@ -90,6 +91,7 @@ export const errorHandler = {
           const errorInfo = {
             key: 'error',
             type: 'javascript',
+            pid: getCookie('pid'),
             page: window.location.href,
             title: window.document.title,
             message: err.message,
@@ -100,7 +102,7 @@ export const errorHandler = {
             ht: Date.now(),
           };
           DB.addLog(errorInfo);
-          this.report(opt);
+          report.reportLog(opt);
           throw err;
         }
       };

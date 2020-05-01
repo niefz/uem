@@ -13,7 +13,8 @@ const baseHandler = {
     if (!getCookie('x-session-id')) setCookie('x-session-id', uuid(), window.location.hostname);
 
     // mark page
-    setCookie('pid', uuid(), window.location.hostname);
+    const pid = uuid();
+    setCookie('pid', pid, window.location.hostname);
 
     const { product, name, version, os } = JSON.parse(JSON.stringify(platform));
     const { performance, navigator } = window;
@@ -26,14 +27,14 @@ const baseHandler = {
     const base = {
       key: 'base',
 
+      // page id
+      pid,
+
       // page
       page: window.location.href,
 
       // page title
       title: window.document.title,
-
-      // page referrer
-      referrer: window.document.referrer,
 
       // app version
       av,

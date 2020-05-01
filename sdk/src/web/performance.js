@@ -3,6 +3,7 @@
  * @type {Object}
  */
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const performanceHandler = {
   init({ type }) {
@@ -115,6 +116,15 @@ const performanceHandler = {
 
       // happen time
       ht: Date.now(),
+
+      // page id
+      pid: getCookie('pid'),
+
+      // page href
+      page: window.location.href,
+
+      // page title
+      title: window.document.title,
     };
 
     DB.addLog(times);

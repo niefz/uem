@@ -4,6 +4,7 @@
  */
 import { record } from 'rrweb';
 import DB from './lib/db';
+import { getCookie } from './lib/utils';
 
 const recordHandler = {
   init() {
@@ -13,6 +14,9 @@ const recordHandler = {
         if (isCheckout) return;
         DB.addLog({
           key: 'record',
+          pid: getCookie('pid'),
+          page: window.location.href,
+          title: window.document.title,
           event: e,
         });
       },

@@ -35,6 +35,7 @@ export const hackXMLHttpRequest = (opt) => {
 
         const xhrInfo = {
           key: 'api',
+          pid: getCookie('pid'),
           page: window.location.href,
           title: window.document.title,
           api: {
