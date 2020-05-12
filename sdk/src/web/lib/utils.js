@@ -29,7 +29,7 @@ export const setCookie = (name, value, domain, path = '/') => {
 export const uuid = () => {
   let timestamp = Date.now();
   if (window.performance && window.performance.now) timestamp += performance.now();
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = (timestamp + Math.random() * 16) % 16 | 0;
     timestamp = Math.floor(timestamp / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -48,7 +48,7 @@ export const domReady = (callback) => {
       timer = null;
       callback();
     } else {
-      timer = setTimeout(check, 100);
+      timer = setTimeout(check, 10);
     }
   };
   window.addEventListener('DOMContentLoaded', check, false);
@@ -66,7 +66,7 @@ export const loaded = (callback) => {
       timer = null;
       callback();
     } else {
-      timer = setTimeout(check, 100);
+      timer = setTimeout(check, 10);
     }
   };
   window.addEventListener('load', check, false);
@@ -212,7 +212,7 @@ export const convertToUrlParams = (data) => {
  */
 export const convertToJson = (str) => {
   let temp = [];
-  const ary = str.split('&');
+  const ary = str ? str.split('&') : [];
   const json = {};
   ary.forEach((item) => {
     temp = item.split('=');

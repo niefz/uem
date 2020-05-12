@@ -27,7 +27,7 @@ export const hackFetch = (opt) => {
           const fetchInfo = {
             key: 'api',
             pid: getCookie('pid'),
-            page: window.location.href,
+            page: decodeURIComponent(window.location.href),
             title: window.document.title,
             api: {
               method,
@@ -38,7 +38,7 @@ export const hackFetch = (opt) => {
               },
               params,
               status,
-              // response,
+              // response: response ? response.slice(0, 10240) : '',
               startTime,
               endTime: performance.now(),
             },

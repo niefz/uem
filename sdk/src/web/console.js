@@ -19,7 +19,7 @@ const consoleHandler = {
           const consoleInfo = {
             key: 'console',
             pid: getCookie('pid'),
-            page: window.location.href,
+            page: decodeURIComponent(window.location.href),
             title: window.document.title,
             level,
             message: [].slice.call(arguments),

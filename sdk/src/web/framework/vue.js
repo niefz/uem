@@ -2,7 +2,6 @@
  * Vue.js 2.0 framework
  */
 import DB from '../lib/db';
-import report from '../report';
 import { getCookie } from '../lib/utils';
 
 function formatComponentName(vm) {
@@ -13,7 +12,7 @@ function formatComponentName(vm) {
   );
 }
 
-export function vuePlugin(Vue) {
+function vuePlugin(Vue) {
   Vue = Vue || window.Vue;
 
   // quit if Vue isn't on the page
@@ -58,7 +57,7 @@ export function vuePlugin(Vue) {
       key: 'error',
       type: 'javascript',
       pid: getCookie('pid'),
-      page: window.location.href,
+      page: decodeURIComponent(window.location.href),
       title: window.document.title,
       message: `${name}: ${message}`,
       lineno,
@@ -71,10 +70,10 @@ export function vuePlugin(Vue) {
 
     DB.addLog(errorInfo);
 
-    report.reportLog(this.config);
-
     if (typeof _oldOnError === 'function') {
       _oldOnError.call(this, error, vm, info);
     }
   };
 }
+
+window.vuePlugin = vuePlugin;

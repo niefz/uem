@@ -30,13 +30,13 @@ export const hackXMLHttpRequest = (opt) => {
     },
     onreadystatechange: function(xhr) {
       if (xhr.readyState === 4) {
-        const { status, response } = xhr.xhr;
+        const { status, responseText } = xhr.xhr;
         const { method, url, headers, params, startTime } = xhr.api;
 
         const xhrInfo = {
           key: 'api',
           pid: getCookie('pid'),
-          page: window.location.href,
+          page: decodeURIComponent(window.location.href),
           title: window.document.title,
           api: {
             method,
@@ -44,7 +44,7 @@ export const hackXMLHttpRequest = (opt) => {
             headers,
             params,
             status,
-            // response,
+            // response: responseText ? responseText.slice(0, 10240) : '',
             startTime,
             endTime: performance.now(),
           },

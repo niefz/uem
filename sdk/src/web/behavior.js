@@ -22,7 +22,7 @@ const behaviorHandler = {
       const behaviorInfo = {
         key: 'behavior',
         pid: getCookie('pid'),
-        page: window.location.href,
+        page: decodeURIComponent(window.location.href),
         title: window.document.title,
         text: sliceText(text),
         nodeName,

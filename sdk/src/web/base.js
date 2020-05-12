@@ -4,13 +4,13 @@
  */
 import * as platform from 'platform';
 import { getCookie, setCookie, uuid, getNetworkType } from './lib/utils';
-import DB from './lib/db';
+import report from './report';
 
 const baseHandler = {
   init(opt) {
-
     // mark session
-    if (!getCookie('x-session-id')) setCookie('x-session-id', uuid(), window.location.hostname);
+    const sid = uuid();
+    if (!getCookie('x-session-id')) setCookie('x-session-id', sid, window.location.hostname);
 
     // mark page
     const pid = uuid();
@@ -21,17 +21,15 @@ const baseHandler = {
     const { navigation } = performance;
     const { type, redirectCount } = navigation;
     const { userAgent, language, connection } = navigator;
-    const { onchange, effectiveType, rtt, downlink, saveData } = connection;
     const { av = '' } = opt;
-
-    const base = {
+    const baseInfo = {
       key: 'base',
 
       // page id
       pid,
 
       // page
-      page: window.location.href,
+      page: decodeURIComponent(window.location.href),
 
       // page title
       title: window.document.title,
@@ -66,19 +64,19 @@ const baseHandler = {
       // network
       network: {
         // 有值代表网络状态变更
-        onchange,
+        onchange: connection ? connection.onchange : '',
 
         // 网络类型
-        effectiveType: getNetworkType() || effectiveType,
+        effectiveType: getNetworkType() || connection ? connection.effectiveType : '未知',
 
         // 估算的往返时间
-        rtt,
+        rtt: connection ? connection.rtt : 0,
 
         // 网络下行速度
-        downlink,
+        downlink: connection ? connection.downlink : 0,
 
         // 打开/请求数据保护模式
-        saveData,
+        saveData: connection ? connection.saveData : false,
       },
 
       // navigation
@@ -98,7 +96,7 @@ const baseHandler = {
       ht: Date.now(),
     };
 
-    DB.addLog(base);
+    report.report(opt, { base: baseInfo }, 'enter');
   },
 };
 

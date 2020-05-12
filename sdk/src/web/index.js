@@ -1,4 +1,5 @@
 import 'default-passive-events';
+import './framework/vue';
 import { domReady, loaded } from './lib/utils';
 import baseHandler from './base';
 import performanceHandler from './performance';
@@ -67,6 +68,9 @@ loaded(() => {
 
   // 资源
   if (options.enableResource) resourceHandler.init(options);
+
+  // 日志上报
+  if (options.autoReport) report.init(options);
 });
 
 // 异常错误
@@ -83,6 +87,3 @@ if (options.enableConsole) consoleHandler.init(options);
 
 // 录屏
 if (options.enableRecord) recordHandler.init(options);
-
-// 日志上报
-if (options.autoReport) report.init(options);

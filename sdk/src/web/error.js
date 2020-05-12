@@ -23,7 +23,8 @@ export const errorHandler = {
         const errorInfo = {
           key: 'error',
           type: 'javascript',
-          page: window.location.href,
+          pid: getCookie('pid'),
+          page: decodeURIComponent(window.location.href),
           title: window.document.title,
           message,
           lineno,
@@ -48,13 +49,14 @@ export const errorHandler = {
       const errorInfo = {
         key: 'error',
         type: 'resource',
-        page: window.location.href,
+        pid: getCookie('pid'),
+        page: decodeURIComponent(window.location.href),
         title: window.document.title,
         message: e.message,
         lineno: e.lineno,
         colno: e.colno,
         source: src || href,
-        stack: e.error.stack.toString(),
+        stack: e.error ? e.error.stack.toString() : '',
         ht: Date.now(),
       };
       DB.addLog(errorInfo);
@@ -68,7 +70,8 @@ export const errorHandler = {
       const errorInfo = {
         key: 'error',
         type: 'promise',
-        page: window.location.href,
+        pid: getCookie('pid'),
+        page: decodeURIComponent(window.location.href),
         title: window.document.title,
         message: e.reason.message,
         lineno: 0,
@@ -82,32 +85,34 @@ export const errorHandler = {
     });
 
     // Script error
-    const originAddEventListener = EventTarget.prototype.addEventListener;
-    EventTarget.prototype.addEventListener = function(type, listener, options) {
-      const wrappedListener = function(...args) {
-        try {
-          return listener.apply(this, args);
-        } catch (err) {
-          const errorInfo = {
-            key: 'error',
-            type: 'javascript',
-            pid: getCookie('pid'),
-            page: window.location.href,
-            title: window.document.title,
-            message: err.message,
-            lineno: 0,
-            colno: 0,
-            source: '',
-            stack: err.stack.toString(),
-            ht: Date.now(),
-          };
-          DB.addLog(errorInfo);
-          report.reportLog(opt);
-          throw err;
-        }
+    if (window.EventTarget) {
+      const originAddEventListener = window.EventTarget.prototype.addEventListener;
+      window.EventTarget.prototype.addEventListener = function(type, listener, options) {
+        const wrappedListener = function(...args) {
+          try {
+            return listener.apply(this, args);
+          } catch (err) {
+            const errorInfo = {
+              key: 'error',
+              type: 'javascript',
+              pid: getCookie('pid'),
+              page: decodeURIComponent(window.location.href),
+              title: window.document.title,
+              message: err.message,
+              lineno: 0,
+              colno: 0,
+              source: '',
+              stack: err.stack.toString(),
+              ht: Date.now(),
+            };
+            DB.addLog(errorInfo);
+            report.reportLog(opt);
+            throw err;
+          }
+        };
+        return originAddEventListener.call(this, type, wrappedListener, options);
       };
-      return originAddEventListener.call(this, type, wrappedListener, options);
-    };
+    }
   },
   report(opt) {
     report.reportLog(opt);

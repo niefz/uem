@@ -11,14 +11,16 @@ const recordHandler = {
     record({
       emit(e, isCheckout) {
         // isCheckout is a flag to tell you the events has been checkout
-        if (isCheckout) return;
-        DB.addLog({
+        // if (isCheckout) return;
+        const recordInfo = {
           key: 'record',
           pid: getCookie('pid'),
-          page: window.location.href,
+          page: decodeURIComponent(window.location.href),
           title: window.document.title,
-          event: e,
-        });
+          event: JSON.stringify(e),
+          ht: Date.now(),
+        };
+        DB.addLog(recordInfo);
       },
       checkoutEveryNms: 5 * 60 * 1000, // checkout every 5 minutes
     });

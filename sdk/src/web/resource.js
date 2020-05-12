@@ -17,7 +17,7 @@ const resourceHandler = {
     const resourceInfo = {
       key: 'resource',
       pid: getCookie('pid'),
-      page: window.location.href,
+      page: decodeURIComponent(window.location.href),
       title: window.document.title,
       resource: resource.map(({ name, startTime, duration, transferSize, initiatorType }) => ({
         name,

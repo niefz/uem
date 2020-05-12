@@ -13,9 +13,9 @@ const performanceHandler = {
   getPerformanceTiming({ type }) {
     const { performance, location } = window;
     const { protocol } = location;
-    const [PerformanceNavigationTiming] = performance.getEntriesByType('navigation');
+    const { timing } = performance;
     const {
-      startTime,
+      navigationStart,
       unloadEventStart,
       unloadEventEnd,
       redirectStart,
@@ -29,36 +29,38 @@ const performanceHandler = {
       requestStart,
       responseStart,
       responseEnd,
+      domLoading,
       domInteractive,
       domContentLoadedEventStart,
       domContentLoadedEventEnd,
       domComplete,
       loadEventStart,
       loadEventEnd,
-    } = PerformanceNavigationTiming;
+    } = timing;
 
     const times = {
       key: 'performance',
-      navigationStart: startTime,
-      redirectStart,
-      unloadEventStart,
-      unloadEventEnd,
-      redirectEnd,
-      fetchStart,
-      domainLookupStart,
-      domainLookupEnd,
-      connectStart,
-      secureConnectionStart,
-      connectEnd,
-      requestStart,
-      responseStart,
-      responseEnd,
-      domInteractive,
-      domContentLoadedEventStart,
-      domContentLoadedEventEnd,
-      domComplete,
-      loadEventStart,
-      loadEventEnd,
+      navigationStart: 0,
+      redirectStart: redirectStart ? redirectStart - navigationStart : 0,
+      unloadEventStart: unloadEventStart ? unloadEventStart - navigationStart : 0,
+      unloadEventEnd: unloadEventEnd ? unloadEventEnd - navigationStart : 0,
+      redirectEnd: redirectEnd ? redirectEnd - navigationStart : 0,
+      fetchStart: fetchStart ? fetchStart - navigationStart : 0,
+      domainLookupStart: domainLookupStart ? domainLookupStart - navigationStart : 0,
+      domainLookupEnd: domainLookupEnd ? domainLookupEnd - navigationStart : 0,
+      connectStart: connectStart ? connectStart - navigationStart : 0,
+      secureConnectionStart: secureConnectionStart ? secureConnectionStart - navigationStart : 0,
+      connectEnd: connectEnd ? connectEnd - navigationStart : 0,
+      requestStart: requestStart ? requestStart - navigationStart : 0,
+      responseStart: responseStart ? responseStart - navigationStart : 0,
+      responseEnd: responseEnd ? responseEnd - navigationStart : 0,
+      domLoading: domLoading ? domLoading - navigationStart : 0,
+      domInteractive: domInteractive ? domInteractive - navigationStart : 0,
+      domContentLoadedEventStart: domContentLoadedEventStart ? domContentLoadedEventStart - navigationStart : 0,
+      domContentLoadedEventEnd: domContentLoadedEventEnd ? domContentLoadedEventEnd - navigationStart : 0,
+      domComplete: domComplete ? domComplete - navigationStart : 0,
+      loadEventStart: loadEventStart ? loadEventStart - navigationStart : 0,
+      loadEventEnd: loadEventEnd ? loadEventEnd - navigationStart : 0,
 
       // 卸载前一个页面耗时
       unload: unloadEventEnd - unloadEventStart,
@@ -68,10 +70,10 @@ const performanceHandler = {
       redirect: redirectEnd - redirectStart,
 
       // 新页面准备耗时
-      ready: fetchStart,
+      ready: fetchStart - navigationStart,
 
       // DNS 读取缓存耗时
-      cache: domainLookupStart,
+      cache: domainLookupStart - fetchStart,
 
       //【重要】DNS 查询耗时
       // 可使用 HTML5 Prefetch 预查询 DNS ，见：[HTML5 prefetch]
@@ -106,10 +108,10 @@ const performanceHandler = {
       tti: domInteractive - fetchStart,
 
       //【重要】HTML 加载完成耗时， 即 DOM Ready 时间
-      domready: domContentLoadedEventEnd - fetchStart,
+      domready: domContentLoadedEventEnd ? domContentLoadedEventEnd - fetchStart : 0,
 
       //【重要】页面完全加载耗时
-      load: loadEventStart - fetchStart,
+      load: loadEventStart ? loadEventStart - fetchStart : 0,
 
       // 加载类型
       type,
@@ -121,7 +123,7 @@ const performanceHandler = {
       pid: getCookie('pid'),
 
       // page href
-      page: window.location.href,
+      page: decodeURIComponent(window.location.href),
 
       // page title
       title: window.document.title,
