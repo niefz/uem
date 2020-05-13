@@ -11,9 +11,15 @@ const performanceHandler = {
     this.getPerformanceTiming({ type });
   },
   getPerformanceTiming({ type }) {
-    const { performance, location } = window;
+    const {
+      performance,
+      mozPerformance,
+      msPerformance,
+      webkitPerformance,
+      location,
+    } = window;
     const { protocol } = location;
-    const { timing } = performance;
+    const { timing } = performance || mozPerformance || msPerformance || webkitPerformance;
     const {
       navigationStart,
       unloadEventStart,
@@ -46,21 +52,21 @@ const performanceHandler = {
       unloadEventEnd: unloadEventEnd ? unloadEventEnd - navigationStart : 0,
       redirectEnd: redirectEnd ? redirectEnd - navigationStart : 0,
       fetchStart: fetchStart ? fetchStart - navigationStart : 0,
-      domainLookupStart: domainLookupStart ? domainLookupStart - navigationStart : 0,
-      domainLookupEnd: domainLookupEnd ? domainLookupEnd - navigationStart : 0,
-      connectStart: connectStart ? connectStart - navigationStart : 0,
-      secureConnectionStart: secureConnectionStart ? secureConnectionStart - navigationStart : 0,
-      connectEnd: connectEnd ? connectEnd - navigationStart : 0,
-      requestStart: requestStart ? requestStart - navigationStart : 0,
-      responseStart: responseStart ? responseStart - navigationStart : 0,
-      responseEnd: responseEnd ? responseEnd - navigationStart : 0,
-      domLoading: domLoading ? domLoading - navigationStart : 0,
-      domInteractive: domInteractive ? domInteractive - navigationStart : 0,
-      domContentLoadedEventStart: domContentLoadedEventStart ? domContentLoadedEventStart - navigationStart : 0,
-      domContentLoadedEventEnd: domContentLoadedEventEnd ? domContentLoadedEventEnd - navigationStart : 0,
-      domComplete: domComplete ? domComplete - navigationStart : 0,
-      loadEventStart: loadEventStart ? loadEventStart - navigationStart : 0,
-      loadEventEnd: loadEventEnd ? loadEventEnd - navigationStart : 0,
+      domainLookupStart: domainLookupStart ? domainLookupStart - fetchStart : 0,
+      domainLookupEnd: domainLookupEnd ? domainLookupEnd - fetchStart : 0,
+      connectStart: connectStart ? connectStart - fetchStart : 0,
+      secureConnectionStart: secureConnectionStart ? secureConnectionStart - fetchStart : 0,
+      connectEnd: connectEnd ? connectEnd - fetchStart : 0,
+      requestStart: requestStart ? requestStart - fetchStart : 0,
+      responseStart: responseStart ? responseStart - fetchStart : 0,
+      responseEnd: responseEnd ? responseEnd - fetchStart : 0,
+      domLoading: domLoading ? domLoading - fetchStart : 0,
+      domInteractive: domInteractive ? domInteractive - fetchStart : 0,
+      domContentLoadedEventStart: domContentLoadedEventStart ? domContentLoadedEventStart - fetchStart : 0,
+      domContentLoadedEventEnd: domContentLoadedEventEnd ? domContentLoadedEventEnd - fetchStart : 0,
+      domComplete: domComplete ? domComplete - fetchStart : 0,
+      loadEventStart: loadEventStart ? loadEventStart - fetchStart : 0,
+      loadEventEnd: loadEventEnd ? loadEventEnd - fetchStart : 0,
 
       // 卸载前一个页面耗时
       unload: unloadEventEnd - unloadEventStart,
