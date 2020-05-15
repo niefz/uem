@@ -13,6 +13,14 @@ const report = {
     // 页面加载时，自动触发上报
     loaded(() => {
       this.reportLog(opt, 'loaded');
+
+      // 定时上报
+      const timeout = 1000 * 10;
+      const interval = () => {
+        this.reportLog(opt);
+        setTimeout(interval, timeout);
+      };
+      setTimeout(interval, timeout);
     });
 
     // 页面后台运行时，自动触发上报
@@ -27,14 +35,6 @@ const report = {
       // event.preventDefault();
       this.reportLog(opt, 'leave');
     });
-
-    // 定时上报
-    const timeout = 1000 * 10;
-    const interval = () => {
-      this.reportLog(opt);
-      setTimeout(interval, timeout);
-    };
-    setTimeout(interval, timeout);
   },
   reportLog(opt, type = 'process') {
     DB.getLogs({
