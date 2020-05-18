@@ -34,7 +34,7 @@ export const hackFetch = (opt) => {
               url,
               headers: {
                 'x-session-id': sid,
-                'x-tracing-id': tid,
+                'x-tracing-id': opt.enableTrace ? tid : '',
               },
               params,
               status,

@@ -23,7 +23,7 @@ export const hackXMLHttpRequest = (opt) => {
       if (params) this.api.params = params;
       this.api.headers = {
         'x-session-id': sid,
-        'x-tracing-id': tid,
+        'x-tracing-id': opt.enableTrace ? tid : '',
       };
       xhr.setRequestHeader('x-session-id', sid);
       if (opt.enableTrace) xhr.setRequestHeader('x-tracing-id', tid);
