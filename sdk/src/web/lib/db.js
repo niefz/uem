@@ -5,7 +5,7 @@
  */
 const DB_NAME = 'uem_db';
 const DB_VERSION = 1;
-const LOG_TABLE_NAME = 'logger_table';
+const DB_STORE_NAME = 'logger_table';
 
 const DB = {
   db: null,
@@ -25,29 +25,29 @@ const DB = {
 
     if (!request) return callback();
 
-    request.onerror = function(e) {
-      callback(e);
-      console.log('indexDB request error');
-      return true;
-    };
-
-    request.onsuccess = function(e) {
-      self.db = e.target.result;
+    request.onsuccess = function(evt) {
+      self.db = this.result;
       setTimeout(function() {
         callback(null, self);
       }, 500);
     };
 
-    request.onupgradeneeded = function(e) {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(LOG_TABLE_NAME)) {
-        db.createObjectStore(LOG_TABLE_NAME, { autoIncrement: true });
+    request.onerror = function(evt) {
+      callback(evt);
+      console.log('indexDB request error');
+      return true;
+    };
+
+    request.onupgradeneeded = function(evt) {
+      const db = evt.currentTarget.result;
+      if (!(db.objectStoreNames && db.objectStoreNames.contains(DB_STORE_NAME))) {
+        db.createObjectStore(DB_STORE_NAME, { autoIncrement: true });
       }
     };
   },
   getStore: function() {
-    const transaction = this.db.transaction(LOG_TABLE_NAME, 'readwrite');
-    return transaction.objectStore(LOG_TABLE_NAME);
+    const tx = this.db.transaction([DB_STORE_NAME], 'readwrite');
+    return tx.objectStore(DB_STORE_NAME);
   },
   addLog: function(log) {
     if (!this.db) {
