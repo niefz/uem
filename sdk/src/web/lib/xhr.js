@@ -20,7 +20,7 @@ export const hackXMLHttpRequest = (opt) => {
       const sid = getCookie('x-session-id');
       const tid = uuid();
       const [params] = arg;
-      if (params) this.api.params = params;
+      if (params) this.api.params = JSON.stringify(params);
       this.api.headers = {
         'x-session-id': sid,
         'x-tracing-id': opt.enableTrace ? tid : '',

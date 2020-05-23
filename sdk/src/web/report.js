@@ -62,7 +62,7 @@ const report = {
     const logger = {
       type,
       aid,
-      sid: getCookie('x-session-id'),
+      sid: getCookie('x-session-id') || '',
       uid: getCookie(uid) || 'anonymous',
       rt: Date.now(),
       ...data,
