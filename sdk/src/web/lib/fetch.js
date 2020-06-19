@@ -10,14 +10,12 @@ export const hackFetch = (opt) => {
   if (!_fetch) return;
 
   window.fetch = function() {
-    const sid = getCookie('x-session-id');
     const tid = uuid();
     const startTime = performance.now();
     const [href, options] = arguments;
     const [url, param] = href.split('?');
     const method = options ? options.method : '';
     const params = options ? options.method === 'GET' ? param : options.body : param;
-    if (arguments[1]) arguments[1].headers['x-session-id'] = sid;
     if (opt.enableTrace) arguments[1].headers['x-tracing-id'] = tid;
     return _fetch
       .apply(this, arguments)
@@ -33,7 +31,6 @@ export const hackFetch = (opt) => {
               method,
               url,
               headers: {
-                'x-session-id': sid,
                 'x-tracing-id': opt.enableTrace ? tid : '',
               },
               params,

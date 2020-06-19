@@ -17,20 +17,17 @@ export const hackXMLHttpRequest = (opt) => {
       };
     },
     send: function(arg, xhr) {
-      const sid = getCookie('x-session-id');
       const tid = uuid();
       const [params] = arg;
       if (params) this.api.params = JSON.stringify(params);
       this.api.headers = {
-        'x-session-id': sid,
         'x-tracing-id': opt.enableTrace ? tid : '',
       };
-      xhr.setRequestHeader('x-session-id', sid);
       if (opt.enableTrace) xhr.setRequestHeader('x-tracing-id', tid);
     },
     onreadystatechange: function(xhr) {
       if (xhr.readyState === 4) {
-        const { status, responseText } = xhr.xhr;
+        const { status, response } = xhr.xhr;
         const { method, url, headers, params, startTime } = xhr.api;
 
         const xhrInfo = {
@@ -44,7 +41,7 @@ export const hackXMLHttpRequest = (opt) => {
             headers,
             params,
             status,
-            // response: responseText ? responseText.slice(0, 10240) : '',
+            // response,
             startTime,
             endTime: performance.now(),
           },

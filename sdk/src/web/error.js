@@ -52,7 +52,7 @@ export const errorHandler = {
         pid: getCookie('pid'),
         page: decodeURIComponent(window.location.href),
         title: window.document.title,
-        message: e.message,
+        message: e.message ? e.message : `${src || href} load error`,
         lineno: e.lineno,
         colno: e.colno,
         source: src || href,
@@ -85,34 +85,34 @@ export const errorHandler = {
     });
 
     // Script error
-    if (window.EventTarget) {
-      const originAddEventListener = window.EventTarget.prototype.addEventListener;
-      window.EventTarget.prototype.addEventListener = function(type, listener, options) {
-        const wrappedListener = function(...args) {
-          try {
-            return listener.apply(this, args);
-          } catch (err) {
-            const errorInfo = {
-              key: 'error',
-              type: 'javascript',
-              pid: getCookie('pid'),
-              page: decodeURIComponent(window.location.href),
-              title: window.document.title,
-              message: err.message,
-              lineno: 0,
-              colno: 0,
-              source: '',
-              stack: err.stack.toString(),
-              ht: Date.now(),
-            };
-            DB.addLog(errorInfo);
-            report.reportLog(opt);
-            throw err;
-          }
-        };
-        return originAddEventListener.call(this, type, wrappedListener, options);
-      };
-    }
+    // if (window.EventTarget) {
+    //   const originAddEventListener = EventTarget.prototype.addEventListener;
+    //   EventTarget.prototype.addEventListener = function(type, listener, options) {
+    //     const wrappedListener = function(...args) {
+    //       try {
+    //         return listener.apply(this, args);
+    //       } catch (err) {
+    //         const errorInfo = {
+    //           key: 'error',
+    //           type: 'javascript',
+    //           pid: getCookie('pid'),
+    //           page: decodeURIComponent(window.location.href),
+    //           title: window.document.title,
+    //           message: err.message,
+    //           lineno: 0,
+    //           colno: 0,
+    //           source: '',
+    //           stack: err.stack.toString(),
+    //           ht: Date.now(),
+    //         };
+    //         DB.addLog(errorInfo);
+    //         report.reportLog(opt);
+    //         throw err;
+    //       }
+    //     };
+    //     return originAddEventListener.call(this, type, wrappedListener, options);
+    //   };
+    // }
   },
   report(opt) {
     report.reportLog(opt);

@@ -1,4 +1,3 @@
-import 'default-passive-events';
 import './framework/vue';
 import { domReady, loaded } from './lib/utils';
 import baseHandler from './base';
