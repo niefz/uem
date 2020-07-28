@@ -2,7 +2,7 @@
  * 单页面统计
  * @type {Object}
  */
-import 'custom-event-polyfill';
+// import 'custom-event-polyfill';
 import DB from './lib/db';
 import { setCookie, uuid } from './lib/utils';
 

@@ -8,19 +8,19 @@ gulp.task('sftp-sit', () => gulp
   .pipe(
     sftp({
       port: '22',
-      host: '10.16.148.102',
+      host: '10.16.148.205',
       user: 'apps',
-      pass: 'oCK%!YF3IS',
-      remotePath: '/apps/svr/apache/htdocs',
+      pass: ':N6ZDI8lLN',
+      remotePath: '/apps/svr/nginx/html',
     }),
   )
   .pipe(
     sftp({
       port: '22',
-      host: '10.16.148.103',
+      host: '10.16.148.206',
       user: 'apps',
-      pass: 'oCK%!YF3IS',
-      remotePath: '/apps/svr/apache/htdocs',
+      pass: ':N6ZDI8lLN',
+      remotePath: '/apps/svr/nginx/html',
     }),
   ));
 
