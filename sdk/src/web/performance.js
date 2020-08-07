@@ -89,7 +89,7 @@ const performanceHandler = {
       tcp: connectEnd - connectStart,
 
       // SSL 安全连接耗时
-      ssl: protocol === 'https:' ? connectEnd - secureConnectionStart : 0,
+      ssl: protocol === 'https:' && secureConnectionStart ? connectEnd - secureConnectionStart : 0,
 
       // ttfb 首字节 即 Time To First Byte 网络请求耗时
       // 维基百科：https://en.wikipedia.org/wiki/Time_To_First_Byte

@@ -1,10 +1,11 @@
 const gulp = require('gulp');
 const sftp = require('gulp-sftp');
 
-gulp.task('sftp-sit', () => gulp
+gulp.task('sftp', () => gulp
   .src([
     './dist/**',
   ])
+  // sit
   .pipe(
     sftp({
       port: '22',
@@ -22,12 +23,8 @@ gulp.task('sftp-sit', () => gulp
       pass: ':N6ZDI8lLN',
       remotePath: '/apps/svr/nginx/html',
     }),
-  ));
-
-gulp.task('sftp-uat', () => gulp
-  .src([
-    './dist/**',
-  ])
+  )
+  // uat
   .pipe(
     sftp({
       port: '22',
@@ -45,4 +42,33 @@ gulp.task('sftp-uat', () => gulp
       pass: 'e)yuLR86-&',
       remotePath: '/apps/svr/nginx/html',
     }),
-  ));
+  )
+  // prod
+  .pipe(
+    sftp({
+      port: '22',
+      host: '10.18.62.122',
+      user: 'apps',
+      pass: 'fFTesy76k',
+      remotePath: '/apps/svr/nginx/html',
+    }),
+  )
+  .pipe(
+    sftp({
+      port: '22',
+      host: '10.18.62.124',
+      user: 'apps',
+      pass: 'fFTesy76k',
+      remotePath: '/apps/svr/nginx/html',
+    }),
+  )
+  .pipe(
+    sftp({
+      port: '22',
+      host: '10.18.62.126',
+      user: 'apps',
+      pass: 'fFTesy76k',
+      remotePath: '/apps/svr/nginx/html',
+    }),
+  ),
+);
